@@ -1,6 +1,7 @@
 # jessic_flutter
 
 A new Flutter project.
+我的第一个Flutter项目。
 
 ## Getting Started
 

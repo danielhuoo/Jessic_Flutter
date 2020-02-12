@@ -10,8 +10,8 @@ class LoginPage extends StatelessWidget {
 
     TextEditingController _phone = new TextEditingController();
     TextEditingController _password = new TextEditingController();
-    _phone.text = '18002280851';
-    _password.text = 'abc12345';
+    _phone.text = '15602298828';
+    _password.text = '82216118';
 
     return Scaffold(
       appBar: AppBar(

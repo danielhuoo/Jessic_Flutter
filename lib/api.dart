@@ -37,7 +37,6 @@ class Api {
     final body = {'uid': uid};
     final response = await post(url['getPlayListInfo'], body);
     Map<String, dynamic> data = convert.jsonDecode(response.body);
-    print(data);
     return data;
   }
 }

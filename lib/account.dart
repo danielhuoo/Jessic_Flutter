@@ -12,9 +12,8 @@ class _AccountPageState extends State<AccountPage>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    print('account');
+    // print('account');
   }
 
   int _count = 0;
