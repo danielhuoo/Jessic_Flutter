@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jessic_flutter/state/listState.dart';
 import 'package:jessic_flutter/state/userState.dart';
 import 'package:provider/provider.dart';
+import 'api.dart';
 
 class SongListPage extends StatefulWidget {
   @override
@@ -16,34 +16,96 @@ class _SongListPageState extends State<SongListPage>
   @override
   void initState() {
     super.initState();
-    // listStateProvider.getState(userStateProvider.uid);
-    print('songlist');
+  }
+
+  Future<List> _getState(String uid) async {
+    print('_getState');
+    var data = await Api.getPlayListInfo(uid);
+    var list = data['playlist'];
+    List _list = List();
+    for (int i = 0; i < list.length; i++) {
+      var listItem = {
+        'playListId': list[i]['id'],
+        'playListName': list[i]['name'].toString(),
+        'trackCount': list[i]['trackCount'].toString(),
+        'coverImgUrl': list[i]['coverImgUrl'].toString()
+      };
+      _list.add(listItem);
+    }
+
+    return _list;
+  }
+
+  Widget getGridWidget(data) {
+    return GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10.0,
+            mainAxisSpacing: 0.0,
+            childAspectRatio: 1.5),
+        itemBuilder: (context, index) {
+          return data[index];
+        },
+        itemCount: data.length);
+  }
+
+  Widget getRowItem(data) {
+    return Row(
+      children: <Widget>[
+        Container(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.network(
+              data['coverImgUrl'],
+              width: 80.0,
+              height: 80.0,
+            ),
+          ),
+        ),
+        Expanded(
+            child: Container(
+          padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(data['playListName']),
+                Text('${data['trackCount']}首')
+              ]),
+        ))
+      ],
+    );
+  }
+
+  Widget getMainBody(data) {
+    return FutureBuilder(
+        future: _getState(data),
+        builder: (BuildContext context, AsyncSnapshot<List> ss) {
+          switch (ss.connectionState) {
+            case ConnectionState.waiting:
+              // print('waiting');
+              return Text('waiting');
+            case ConnectionState.done:
+              List<Widget> playList = List();
+              for (int i = 0; i < ss.data.length; i++) {
+                playList.add(getRowItem(ss.data[i]));
+              }
+
+              return getGridWidget(playList);
+            default:
+              return Text('11');
+          }
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-    print('111');
     super.build(context);
-    ListState listStateProvider = Provider.of<ListState>(context);
-    UserState userStateProvider = Provider.of<UserState>(context);
-
-    listStateProvider.getState(userStateProvider.uid);
+    UserState provider = Provider.of<UserState>(context);
     return Scaffold(
-        body: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 2.0,
-              mainAxisSpacing: 2.0,
-              childAspectRatio: 0.7
-              ),
-          itemBuilder: (context, index) {
-            return Image.network(listStateProvider.playList[index]['coverImgUrl']);
-            // return Image(
-            //   image:NetworkImage(listStateProvider.playList[index]['coverImgUrl']),
-            //   width:25.0            
-            // );
-          },
-          itemCount: listStateProvider.playList.length,
-    ));
+        appBar: AppBar(title: Text('歌单列表')),
+        body: Container(
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: getMainBody(provider.uid)));
   }
 }

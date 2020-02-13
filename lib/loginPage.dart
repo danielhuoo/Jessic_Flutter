@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jessic_flutter/state/userState.dart';
 import 'package:provider/provider.dart';
-import 'api.dart';
 class LoginPage extends StatelessWidget {
   
   @override
@@ -10,13 +9,13 @@ class LoginPage extends StatelessWidget {
 
     TextEditingController _phone = new TextEditingController();
     TextEditingController _password = new TextEditingController();
-    _phone.text = '15602298828';
-    _password.text = '82216118';
+    _phone.text = '18002280851';
+    _password.text = 'abc12345';
 
     return Scaffold(
       appBar: AppBar(
         title: Text('手机号登录',style: TextStyle(color:Colors.black),),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.lightBlue,
         elevation: 0.0,
         ),
       body:Center(
@@ -44,7 +43,7 @@ class LoginPage extends StatelessWidget {
               )
             ],
           ),
-          padding: const EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(10.0),
         ),
       )
     );

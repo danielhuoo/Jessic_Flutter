@@ -27,6 +27,7 @@ class _AccountPageState extends State<AccountPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      appBar: AppBar(title: Text('我的账号')),
       body: Center(child: Text(_count.toString())),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

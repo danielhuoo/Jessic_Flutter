@@ -14,7 +14,6 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   @override
   void initState() {
     super.initState();
-    print('bottom');
   }
 
   @override
