@@ -10,7 +10,6 @@ class UserState extends ChangeNotifier {
 
   get uid => _uid;
   get username => _username;
-  // set username() =>
   get nickname => _nickname;
   get avatarUrl => _avatarUrl;
   get isLogined => _isLogined;

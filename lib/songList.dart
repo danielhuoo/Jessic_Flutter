@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jessic_flutter/ListDetailPage.dart';
 import 'package:jessic_flutter/state/userState.dart';
 import 'package:provider/provider.dart';
 import 'api.dart';
@@ -19,13 +20,13 @@ class _SongListPageState extends State<SongListPage>
   }
 
   Future<List> _getState(String uid) async {
-    print('_getState');
+    // print('_getState');
     var data = await Api.getPlayListInfo(uid);
     var list = data['playlist'];
     List _list = List();
     for (int i = 0; i < list.length; i++) {
       var listItem = {
-        'playListId': list[i]['id'],
+        'playListId': list[i]['id'].toString(),
         'playListName': list[i]['name'].toString(),
         'trackCount': list[i]['trackCount'].toString(),
         'coverImgUrl': list[i]['coverImgUrl'].toString()
@@ -50,31 +51,44 @@ class _SongListPageState extends State<SongListPage>
   }
 
   Widget getRowItem(data) {
-    return Row(
-      children: <Widget>[
-        Container(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              data['coverImgUrl'],
-              width: 80.0,
-              height: 80.0,
+    return GestureDetector(
+        child: Row(
+          children: <Widget>[
+            Container(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  data['coverImgUrl'],
+                  width: 80.0,
+                  height: 80.0,
+                ),
+              ),
             ),
-          ),
+            Expanded(
+                child: Container(
+              padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(data['playListName'],
+                        maxLines: 2, overflow: TextOverflow.ellipsis),
+                    Text(
+                      '${data['trackCount']}首',
+                      style:
+                          TextStyle(color: Color.fromARGB(255, 147, 147, 147)),
+                    )
+                  ]),
+            ))
+          ],
         ),
-        Expanded(
-            child: Container(
-          padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(data['playListName']),
-                Text('${data['trackCount']}首')
-              ]),
-        ))
-      ],
-    );
+        onTap: () {
+          // print(data['playListId']);
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (BuildContext context) {
+            return ListDetailPage(playListId: data['playListId']);
+          }));
+        });
   }
 
   Widget getMainBody(data) {

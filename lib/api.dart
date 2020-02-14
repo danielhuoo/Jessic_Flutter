@@ -5,7 +5,8 @@ const baseURL = 'http://192.168.1.110:3000';
 const url = {
   "login": '/login/cellphone',
   'getUserDetail': '/user/detail',
-  'getPlayListInfo': '/user/playlist'
+  'getPlayListInfo': '/user/playlist',
+  'getPlayListDetail': '/playlist/detail',
 };
 
 class Api {
@@ -36,6 +37,13 @@ class Api {
   static getPlayListInfo(String uid) async {
     final body = {'uid': uid};
     final response = await post(url['getPlayListInfo'], body);
+    Map<String, dynamic> data = convert.jsonDecode(response.body);
+    return data;
+  }
+
+  static getPlayListDetail(String playListId) async {
+    final body = {'id': playListId};
+    final response = await post(url['getPlayListDetail'], body);
     Map<String, dynamic> data = convert.jsonDecode(response.body);
     return data;
   }

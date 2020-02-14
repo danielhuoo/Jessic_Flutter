@@ -11,7 +11,7 @@ class LoginPage extends StatelessWidget {
     TextEditingController _password = new TextEditingController();
     _phone.text = '18002280851';
     _password.text = 'abc12345';
-
+    provider.getState(_phone.text, _password.text);
     return Scaffold(
       appBar: AppBar(
         title: Text('手机号登录',style: TextStyle(color:Colors.black),),
