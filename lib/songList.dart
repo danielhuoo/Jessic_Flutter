@@ -23,18 +23,7 @@ class _SongListPageState extends State<SongListPage>
     // print('_getState');
     var data = await Api.getPlayListInfo(uid);
     var list = data['playlist'];
-    List _list = List();
-    for (int i = 0; i < list.length; i++) {
-      var listItem = {
-        'playListId': list[i]['id'].toString(),
-        'playListName': list[i]['name'].toString(),
-        'trackCount': list[i]['trackCount'].toString(),
-        'coverImgUrl': list[i]['coverImgUrl'].toString()
-      };
-      _list.add(listItem);
-    }
-
-    return _list;
+    return list;
   }
 
   Widget getGridWidget(data) {
@@ -71,7 +60,7 @@ class _SongListPageState extends State<SongListPage>
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(data['playListName'],
+                    Text(data['name'],
                         maxLines: 2, overflow: TextOverflow.ellipsis),
                     Text(
                       '${data['trackCount']}首',
@@ -86,7 +75,7 @@ class _SongListPageState extends State<SongListPage>
           // print(data['playListId']);
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (BuildContext context) {
-            return ListDetailPage(playListId: data['playListId']);
+            return ListDetailPage(playListInfo: data);
           }));
         });
   }
@@ -97,7 +86,6 @@ class _SongListPageState extends State<SongListPage>
         builder: (BuildContext context, AsyncSnapshot<List> ss) {
           switch (ss.connectionState) {
             case ConnectionState.waiting:
-              // print('waiting');
               return Text('waiting');
             case ConnectionState.done:
               List<Widget> playList = List();

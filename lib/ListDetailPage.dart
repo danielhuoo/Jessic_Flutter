@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-
 import 'api.dart';
 
 class ListDetailPage extends StatelessWidget {
-  final String playListId;
-  ListDetailPage({Key key, @required this.playListId}) : super(key: key);
+  final playListInfo;
+  ListDetailPage({Key key, @required this.playListInfo}) : super(key: key);
 
   Future<List> _getState(String playListId) async {
     print('_getState');
     var data = await Api.getPlayListDetail(playListId);
     var songs = data['playlist']['tracks'];
-    print(songs.length);
     return songs;
   }
 
-  Widget getMainBody(data) {
+  Widget getMainBody() {
     return FutureBuilder(
-        future: _getState(data),
+        future: _getState(this.playListInfo['id'].toString()),
         builder: (BuildContext context, AsyncSnapshot<List> ss) {
           switch (ss.connectionState) {
             case ConnectionState.waiting:
-              // print('waiting');
               return Text('waiting');
             case ConnectionState.done:
               List<Widget> songList = List();
@@ -28,10 +25,31 @@ class ListDetailPage extends StatelessWidget {
               for (int i = 0; i < ss.data.length; i++) {
                 songList.add(getListTile(ss.data[i], i, 0));
               }
-
-              return getListWidget(songList);
+              return Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: Row(children: <Widget>[
+                      Container(
+                        child: getPlayListImgWidget(),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Text('我喜欢的音乐'),
+                      )
+                    ]),
+                  ),
+                  Expanded(
+                    child: Container(
+                      // height: 500,
+                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: getListWidget(songList),
+                    ),
+                  )
+                ],
+              );
             default:
-              return Text('11');
+              return Text('');
           }
         });
   }
@@ -72,7 +90,7 @@ class ListDetailPage extends StatelessWidget {
                     children: <Widget>[
                       Text(data['name']),
                       Text(
-                        data['ar'][0]['name'],
+                        '${data['ar'][0]['name']} - ${data['al']['name']}',
                         style:
                             TextStyle(color: Color.fromARGB(255, 96, 96, 97)),
                       )
@@ -81,7 +99,7 @@ class ListDetailPage extends StatelessWidget {
             ],
           ),
           onTap: () {
-            print(index);
+            print(data['id']);
           },
           behavior: HitTestBehavior.opaque);
     }
@@ -99,12 +117,18 @@ class ListDetailPage extends StatelessWidget {
         padding: EdgeInsets.all(10));
   }
 
+  Widget getPlayListImgWidget() {
+    return Container(
+      child: Image.network(
+        this.playListInfo['coverImgUrl'],
+        width: 150,
+        height: 150,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text('歌单详情')),
-        body: Container(
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: getMainBody(this.playListId)));
+    return Scaffold(appBar: AppBar(title: Text('歌单')), body: getMainBody());
   }
 }
