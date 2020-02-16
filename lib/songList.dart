@@ -19,14 +19,43 @@ class _SongListPageState extends State<SongListPage>
     super.initState();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    UserState provider = Provider.of<UserState>(context);
+    return Scaffold(
+        appBar: AppBar(title: Text('歌单列表')), body: mainBody(provider.uid));
+  }
+
   Future<List> _getState(String uid) async {
-    // print('_getState');
     var data = await Api.getPlayListInfo(uid);
     var list = data['playlist'];
     return list;
   }
 
-  Widget getGridWidget(data) {
+  Widget mainBody(data) {
+    return Container(
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+        child: FutureBuilder(
+            future: _getState(data),
+            builder: (BuildContext context, AsyncSnapshot<List> ss) {
+              switch (ss.connectionState) {
+                case ConnectionState.waiting:
+                  return Text('waiting');
+                case ConnectionState.done:
+                  List<Widget> playList = List();
+                  for (int i = 0; i < ss.data.length; i++) {
+                    playList.add(getRowItem(ss.data[i]));
+                  }
+
+                  return gridWidget(playList);
+                default:
+                  return Text('11');
+              }
+            }));
+  }
+
+  Widget gridWidget(data) {
     return GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
@@ -78,36 +107,5 @@ class _SongListPageState extends State<SongListPage>
             return ListDetailPage(playListInfo: data);
           }));
         });
-  }
-
-  Widget getMainBody(data) {
-    return FutureBuilder(
-        future: _getState(data),
-        builder: (BuildContext context, AsyncSnapshot<List> ss) {
-          switch (ss.connectionState) {
-            case ConnectionState.waiting:
-              return Text('waiting');
-            case ConnectionState.done:
-              List<Widget> playList = List();
-              for (int i = 0; i < ss.data.length; i++) {
-                playList.add(getRowItem(ss.data[i]));
-              }
-
-              return getGridWidget(playList);
-            default:
-              return Text('11');
-          }
-        });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    UserState provider = Provider.of<UserState>(context);
-    return Scaffold(
-        appBar: AppBar(title: Text('歌单列表')),
-        body: Container(
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: getMainBody(provider.uid)));
   }
 }

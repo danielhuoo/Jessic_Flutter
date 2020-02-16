@@ -5,6 +5,11 @@ class ListDetailPage extends StatelessWidget {
   final playListInfo;
   ListDetailPage({Key key, @required this.playListInfo}) : super(key: key);
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(appBar: AppBar(title: Text('歌单')), body: mainBody());
+  }
+
   Future<List> _getState(String playListId) async {
     print('_getState');
     var data = await Api.getPlayListDetail(playListId);
@@ -12,7 +17,108 @@ class ListDetailPage extends StatelessWidget {
     return songs;
   }
 
-  Widget getMainBody() {
+  Widget playListInfoWidget() {
+    return Container(
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+        child: Row(children: <Widget>[
+          playListImgWidget(),
+          Expanded(
+            child: Container(
+                height: 150,
+                // decoration: BoxDecoration(
+                //   color: Colors.grey,
+                // ),
+                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                child: ListView(shrinkWrap: true, children: <Widget>[
+                  Text(
+                    this.playListInfo['name'],
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Row(children: <Widget>[
+                      ClipOval(
+                          child: new Image.network(
+                        this.playListInfo['creator']['avatarUrl'],
+                        width: 30,
+                      )),
+                      Text(
+                        '  ${this.playListInfo['creator']['nickname']}',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      Icon(Icons.navigate_next)
+                    ]),
+                  ),
+                ])),
+          )
+        ]));
+  }
+
+  Widget fourBtnsWidget() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+      child: Flex(children: <Widget>[
+        Expanded(
+            flex: 1,
+            child: GestureDetector(
+                onTap: () {
+                  print('评论');
+                },
+                child: Container(
+                    child: Column(
+                        children: <Widget>[Icon(Icons.comment), Text('评论')])))),
+        Expanded(
+            flex: 1,
+            child: GestureDetector(
+                onTap: () {
+                  print('分享');
+                },
+                child: Container(
+                    child: Column(
+                        children: <Widget>[Icon(Icons.share), Text('分享')])))),
+        Expanded(
+            flex: 1,
+            child: GestureDetector(
+                onTap: () {
+                  print('下载');
+                },
+                child: Container(
+                    child: Column(children: <Widget>[
+                  Icon(Icons.file_download),
+                  Text('下载')
+                ])))),
+        Expanded(
+            flex: 1,
+            child: GestureDetector(
+                onTap: () {
+                  print('多选');
+                },
+                child: Container(
+                    child: Column(children: <Widget>[
+                  Icon(Icons.select_all),
+                  Text('多选')
+                ])))),
+      ], direction: Axis.horizontal),
+    );
+  }
+
+  Widget getListWidget(data) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+        child: ListView.builder(
+            itemBuilder: (context, index) {
+              return data[index];
+            },
+            itemExtent: 60.0,
+            itemCount: data.length,
+            padding: EdgeInsets.all(10)),
+      ),
+    );
+  }
+
+  Widget mainBody() {
     return FutureBuilder(
         future: _getState(this.playListInfo['id'].toString()),
         builder: (BuildContext context, AsyncSnapshot<List> ss) {
@@ -25,27 +131,15 @@ class ListDetailPage extends StatelessWidget {
               for (int i = 0; i < ss.data.length; i++) {
                 songList.add(getListTile(ss.data[i], i, 0));
               }
+
               return Column(
                 children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    child: Row(children: <Widget>[
-                      Container(
-                        child: getPlayListImgWidget(),
-                      ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        child: Text('我喜欢的音乐'),
-                      )
-                    ]),
-                  ),
-                  Expanded(
-                    child: Container(
-                      // height: 500,
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: getListWidget(songList),
-                    ),
-                  )
+                  //歌单详情
+                  playListInfoWidget(),
+                  //四个按钮
+                  fourBtnsWidget(),
+                  //歌曲列表
+                  getListWidget(songList)
                 ],
               );
             default:
@@ -88,11 +182,13 @@ class ListDetailPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Text(data['name']),
+                      Text('${data['name']}'), //(${data['alia'][0]})
                       Text(
                         '${data['ar'][0]['name']} - ${data['al']['name']}',
-                        style:
-                            TextStyle(color: Color.fromARGB(255, 96, 96, 97)),
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Color.fromARGB(255, 96, 96, 97)),
                       )
                     ],
                   ))
@@ -107,17 +203,7 @@ class ListDetailPage extends StatelessWidget {
     return row;
   }
 
-  Widget getListWidget(data) {
-    return ListView.builder(
-        itemBuilder: (context, index) {
-          return data[index];
-        },
-        itemExtent: 60.0,
-        itemCount: data.length,
-        padding: EdgeInsets.all(10));
-  }
-
-  Widget getPlayListImgWidget() {
+  Widget playListImgWidget() {
     return Container(
       child: Image.network(
         this.playListInfo['coverImgUrl'],
@@ -125,10 +211,5 @@ class ListDetailPage extends StatelessWidget {
         height: 150,
       ),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('歌单')), body: getMainBody());
   }
 }
