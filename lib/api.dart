@@ -6,7 +6,7 @@ const url = {
   "login": '/login/cellphone',
   'getUserDetail': '/user/detail',
   'getPlayListInfo': '/user/playlist',
-  'getPlayListDetail': '/playlist/detail',
+  'getPlayListDetail': '/playlist/detail'
 };
 
 class Api {

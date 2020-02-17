@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jessic_flutter/PlayerPage.dart';
 import 'api.dart';
 
 class ListDetailPage extends StatelessWidget {
@@ -7,7 +8,7 @@ class ListDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('歌单')), body: mainBody());
+    return Scaffold(appBar: AppBar(title: Text('歌单')), body: mainBody(context));
   }
 
   Future<List> _getState(String playListId) async {
@@ -118,7 +119,7 @@ class ListDetailPage extends StatelessWidget {
     );
   }
 
-  Widget mainBody() {
+  Widget mainBody(context) {
     return FutureBuilder(
         future: _getState(this.playListInfo['id'].toString()),
         builder: (BuildContext context, AsyncSnapshot<List> ss) {
@@ -127,9 +128,9 @@ class ListDetailPage extends StatelessWidget {
               return Text('waiting');
             case ConnectionState.done:
               List<Widget> songList = List();
-              songList.add(getListTile(null, -1, ss.data.length));
+              songList.add(getListTile(null, null, -1, ss.data.length));
               for (int i = 0; i < ss.data.length; i++) {
-                songList.add(getListTile(ss.data[i], i, 0));
+                songList.add(getListTile(context, ss.data[i], i, 0));
               }
 
               return Column(
@@ -148,7 +149,7 @@ class ListDetailPage extends StatelessWidget {
         });
   }
 
-  Widget getListTile(data, index, length) {
+  Widget getListTile(context, data, index, length) {
     Widget row;
     if (index == -1) {
       //播放全部
@@ -195,7 +196,10 @@ class ListDetailPage extends StatelessWidget {
             ],
           ),
           onTap: () {
-            print(data['id']);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (BuildContext context) {
+              return PlayerPage(songInfo: data);
+            }));
           },
           behavior: HitTestBehavior.opaque);
     }

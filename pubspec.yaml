@@ -17,6 +17,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  audioplayers: ^0.14.0
   provider: ^4.0.0
   shared_preferences: ^0.4.2
   flutter:

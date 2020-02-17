@@ -10,6 +10,7 @@ class HomePage extends StatelessWidget {
     UserState provider = Provider.of<UserState>(context);
     return Scaffold(
         body: provider.isLogined ? BottomNavigationWidget() : LoginPage()
-    );
+        // body:PlayerPage()
+        );
   }
 }
