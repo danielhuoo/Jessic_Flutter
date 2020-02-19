@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jessic_flutter/PlayerPage.dart';
+import 'package:jessic_flutter/state/indexPageState.dart';
+import 'package:provider/provider.dart';
 import 'songList.dart';
 import 'account.dart';
 
@@ -8,19 +11,20 @@ class BottomNavigationWidget extends StatefulWidget {
 }
 
 class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
-  int _selectedIndex = 0;
-  final List<Widget> tabBodies = [SongListPage(), AccountPage()];
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  final List<Widget> tabBodies = [
+    SongListPage(),
+    AccountPage(),
+    PlayerPage(
+      songInfo: null,
+    )
+  ];
 
   @override
   Widget build(BuildContext context) {
+    IndexPageState provider = Provider.of<IndexPageState>(context);
     return Scaffold(
       body: IndexedStack(
-        index: _selectedIndex,
+        index: provider.selectedIndex,
         children: tabBodies,
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -37,11 +41,11 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               ),
               title: Text('账号'))
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: provider.selectedIndex,
         selectedItemColor: Colors.red,
         onTap: (int index) {
           setState(() {
-            _selectedIndex = index;
+            provider.setIndex(index);
           });
         },
       ),

@@ -18,6 +18,18 @@ class ListDetailPage extends StatelessWidget {
     return songs;
   }
 
+  getAlias(data) {
+    String alias = '';
+    for (int i = 0; i < data['alia'].length; i++) {
+      alias += data['alia'][i];
+    }
+
+    if (alias != '') {
+      alias = '(${alias})';
+    }
+    return alias;
+  }
+
   Widget playListInfoWidget() {
     return Container(
         padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -183,7 +195,16 @@ class ListDetailPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Text('${data['name']}'), //(${data['alia'][0]})
+                      Row(
+                        children: <Widget>[
+                          Text(data['name']),
+                          Text(
+                            getAlias(data),
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 96, 96, 97)),
+                          ),
+                        ],
+                      ),
                       Text(
                         '${data['ar'][0]['name']} - ${data['al']['name']}',
                         overflow: TextOverflow.ellipsis,

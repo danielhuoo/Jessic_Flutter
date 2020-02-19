@@ -15,11 +15,6 @@ class _SongListPageState extends State<SongListPage>
   bool get wantKeepAlive => true;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     super.build(context);
     UserState provider = Provider.of<UserState>(context);

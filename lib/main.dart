@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jessic_flutter/HomePage.dart';
+import 'package:jessic_flutter/state/indexPageState.dart';
 import 'package:jessic_flutter/state/userState.dart';
 import 'package:provider/provider.dart';
 
@@ -15,8 +16,9 @@ class MyApp extends StatelessWidget {
       ),
       home: MultiProvider(
         providers: [
+          ChangeNotifierProvider(create: (context) => IndexPageState()),
           ChangeNotifierProvider(create: (context) => UserState())
-          ],
+        ],
         child: HomePage(),
       ),
     );
