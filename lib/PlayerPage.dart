@@ -14,8 +14,7 @@ class PlayerPage extends StatefulWidget {
   _PlayerPageState createState() => _PlayerPageState();
 }
 
-class _PlayerPageState extends State<PlayerPage>
-    with AutomaticKeepAliveClientMixin {
+class _PlayerPageState extends State<PlayerPage> {
   AudioPlayer audioPlayer;
 
   AudioPlayerState audioPlayerState;
@@ -172,11 +171,10 @@ class _PlayerPageState extends State<PlayerPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    if (widget.songInfo == null) {
-      print('空白页');
-      return Scaffold(appBar: AppBar(title: Text('空白页')));
-    }
+    // if (widget.songInfo == null) {
+    //   print('空白页');
+    //   return Scaffold(appBar: AppBar(title: Text('空白页')));
+    // }
     return Scaffold(
         // appBar: AppBar(title: ),
         appBar: AppBar(
@@ -303,7 +301,4 @@ class _PlayerPageState extends State<PlayerPage>
               ],
             )));
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

@@ -12,10 +12,7 @@ class BottomNavigationWidget extends StatefulWidget {
 class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   final List<Widget> tabBodies = [
     SongListPage(),
-    AccountPage(),
-    PlayerPage(
-      songInfo: null,
-    )
+    AccountPage()
   ];
 
   int _selectedIndex = 0;
