@@ -1,6 +1,6 @@
-import 'dart:async';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:jessic_flutter/MusicService.dart';
 
 // example : https://github.com/luanpotter/audioplayers/blob/master/example/lib/player_widget.dart
 // Slider api: https://blog.csdn.net/qq_33635385/article/details/100067702
@@ -8,152 +8,41 @@ import 'package:flutter/material.dart';
 
 class PlayerPage extends StatefulWidget {
   final songInfo;
-  PlayerPage({Key key, @required this.songInfo}) : super(key: key);
+  final bool isOnlyDisplay;
+  PlayerPage({Key key, @required this.songInfo, this.isOnlyDisplay})
+      : super(key: key);
 
   @override
   _PlayerPageState createState() => _PlayerPageState();
 }
 
 class _PlayerPageState extends State<PlayerPage> {
-  AudioPlayer audioPlayer;
-
-  AudioPlayerState audioPlayerState;
-  bool showPlayBtn = true;
-  Duration audioPlayerDuration;
-  Duration audioPlayerPosition;
-  double progressValue = 0.0;
-
-  StreamSubscription durationSubscription;
-  StreamSubscription positionSubscription;
-  StreamSubscription completeSubscription;
-
-  String durationText = '';
-  String positionText = '';
-
-  void initPlayerState() async {
-    print('initPlayerState');
-
-    //init durationText & positionText to 0:00:00
-    Duration zeroDuration = Duration(hours: 0, minutes: 0, seconds: 0);
-    positionText = durationText =
-        zeroDuration?.toString()?.split('.')?.first?.substring(2);
-
-    //create the instance of audioplayer
-    audioPlayer = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
-
-    audioPlayer.onPlayerStateChanged.listen((AudioPlayerState s) {
-      setState(() => audioPlayerState = s);
-    });
-
-    durationSubscription = audioPlayer.onDurationChanged.listen((Duration d) {
-      print('Max duration================= $d');
-      setState(() {
-        audioPlayerDuration = d;
-        durationText = d?.toString()?.split('.')?.first?.substring(2) ?? '';
-      });
-    });
-
-    positionSubscription =
-        audioPlayer.onAudioPositionChanged.listen((Duration p) {
-      setState(() {
-        audioPlayerPosition = p;
-        positionText = p?.toString()?.split('.')?.first?.substring(2) ?? '';
-        try {
-          progressValue =
-              audioPlayerPosition.inSeconds / audioPlayerDuration.inSeconds;
-        } catch (e) {}
-      });
-    });
-
-    completeSubscription = audioPlayer.onPlayerCompletion.listen((event) {
-      _onComplete();
-      next();
-    });
-
-    String url =
-        'https://music.163.com/song/media/outer/url?id=${widget.songInfo['id']}.mp3';
-    // String url = 'https://music.163.com/song/media/outer/url?id=158655.mp3';
-    int result = await audioPlayer.setUrl(url);
-    if (result == 1) {
-      // playSong();
-    }
-  }
+  var playerInstance = GetIt.instance.get<MusicServiceModel>();
 
   @override
   initState() {
     super.initState();
-    if (widget.songInfo != null) {
-      initPlayerState();
+    playerInstance.addListener(update);
+    if (widget.isOnlyDisplay != true) {
+      playerInstance.init(widget.songInfo);
+    }else{
+      print('仅显示播放页');
     }
   }
 
-  // @override
-  // void dispose() {
-  //   print('dipose');
-  //   audioPlayer.stop();
-  //   durationSubscription.cancel();
-  //   positionSubscription.cancel();
-  //   completeSubscription.cancel();
-  //   super.dispose();
-  // }
+  update() => setState(() => {});
 
-  playSong() {
-    if (audioPlayerState != AudioPlayerState.PLAYING) {
-      resume();
-    } else {
-      pause();
-    }
-  }
-
-  void _onComplete() {
-    //state会变为 AudioPlayerState.COMPLETED
-    // print('state:${audioPlayerState}');
-    setState(() {
-      showPlayBtn = true;
-    });
-    // setState(() {
-    //   audioPlayerState =
-    // });
-  }
-
-  resume() async {
-    int result = await audioPlayer.resume();
-    if (result == 1) {
-      print('play');
-      setState(() {
-        showPlayBtn = false;
-      });
-    }
-  }
-
-  pause() async {
-    int result = await audioPlayer.pause();
-    if (result == 1) {
-      print('pause');
-      setState(() {
-        showPlayBtn = true;
-      });
-    }
-  }
-
-  prev() {
-    print('prev');
-  }
-
-  next() {
-    print('next');
-  }
-
-  release() async {
-    print('release');
-    await audioPlayer.release();
+  @override
+  void dispose() {
+    playerInstance.removeListener(update);
+    super.dispose();
   }
 
   Widget playBtnWidget() {
     return IconButton(
       iconSize: 70.0,
       onPressed: () {
-        playSong();
+        playerInstance.playSong();
       },
       icon: Icon(Icons.play_circle_outline),
     );
@@ -163,7 +52,7 @@ class _PlayerPageState extends State<PlayerPage> {
     return IconButton(
       iconSize: 70.0,
       onPressed: () {
-        playSong();
+        playerInstance.playSong();
       },
       icon: Icon(Icons.pause_circle_outline),
     );
@@ -171,19 +60,14 @@ class _PlayerPageState extends State<PlayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    // if (widget.songInfo == null) {
-    //   print('空白页');
-    //   return Scaffold(appBar: AppBar(title: Text('空白页')));
-    // }
     return Scaffold(
-        // appBar: AppBar(title: ),
         appBar: AppBar(
           title: Column(children: <Widget>[
             Text(
-              widget.songInfo['name'],
+              playerInstance.songInfo['name'],
               style: TextStyle(fontSize: 17),
             ),
-            Text('${widget.songInfo['ar'][0]['name']}',
+            Text('${playerInstance.songInfo['ar'][0]['name']}',
                 style: TextStyle(fontSize: 15))
           ]),
         ),
@@ -196,7 +80,7 @@ class _PlayerPageState extends State<PlayerPage> {
                     flex: 1,
                     child: Container(
                         child: Image.network(
-                      widget.songInfo['al']['picUrl'],
+                      playerInstance.songInfo['al']['picUrl'],
                       // width: 50,
                     ))),
                 //喜欢按钮们
@@ -210,7 +94,7 @@ class _PlayerPageState extends State<PlayerPage> {
                           color: Colors.red,
                           iconSize: 27.0,
                           onPressed: () {
-                            prev();
+                            playerInstance.prev();
                           },
                           icon: Icon(Icons.favorite),
                         )),
@@ -218,7 +102,7 @@ class _PlayerPageState extends State<PlayerPage> {
                             child: IconButton(
                           iconSize: 27.0,
                           onPressed: () {
-                            prev();
+                            playerInstance.prev();
                           },
                           icon: Icon(Icons.comment),
                         )),
@@ -226,7 +110,7 @@ class _PlayerPageState extends State<PlayerPage> {
                             child: IconButton(
                           iconSize: 27.0,
                           onPressed: () {
-                            prev();
+                            playerInstance.prev();
                           },
                           icon: Icon(Icons.more_vert),
                         )),
@@ -238,7 +122,8 @@ class _PlayerPageState extends State<PlayerPage> {
                     child: Flex(
                       direction: Axis.horizontal,
                       children: <Widget>[
-                        Expanded(flex: 1, child: Text(positionText)),
+                        Expanded(
+                            flex: 1, child: Text(playerInstance.positionText)),
                         Expanded(
                             flex: 5,
                             child: SliderTheme(
@@ -248,10 +133,11 @@ class _PlayerPageState extends State<PlayerPage> {
                                         enabledThumbRadius: 4.0,
                                         disabledThumbRadius: 3.0)),
                                 child: Slider(
-                                  value: this.progressValue,
+                                  value: playerInstance.progressValue,
                                   onChanged: (double nv) {},
                                 ))),
-                        Expanded(flex: 1, child: Text(durationText)),
+                        Expanded(
+                            flex: 1, child: Text(playerInstance.durationText)),
                       ],
                     )),
                 //播放按钮
@@ -264,7 +150,7 @@ class _PlayerPageState extends State<PlayerPage> {
                             child: IconButton(
                           iconSize: 40.0,
                           onPressed: () {
-                            prev();
+                            playerInstance.prev();
                           },
                           icon: Icon(Icons.repeat),
                         )),
@@ -272,19 +158,19 @@ class _PlayerPageState extends State<PlayerPage> {
                             child: IconButton(
                           iconSize: 40.0,
                           onPressed: () {
-                            prev();
+                            playerInstance.prev();
                           },
                           icon: Icon(Icons.skip_previous),
                         )),
                         Expanded(
-                            child: showPlayBtn
+                            child: playerInstance.showPlayBtn
                                 ? playBtnWidget()
                                 : pauseBtnWidget()),
                         Expanded(
                             child: IconButton(
                           iconSize: 40.0,
                           onPressed: () {
-                            next();
+                            playerInstance.next();
                           },
                           icon: Icon(Icons.skip_next),
                         )),
@@ -292,7 +178,7 @@ class _PlayerPageState extends State<PlayerPage> {
                             child: IconButton(
                           iconSize: 40.0,
                           onPressed: () {
-                            next();
+                            playerInstance.next();
                           },
                           icon: Icon(Icons.playlist_play),
                         ))

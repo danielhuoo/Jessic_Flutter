@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:jessic_flutter/PlayerPage.dart';
-import 'package:provider/provider.dart';
 import 'songList.dart';
 import 'account.dart';
 
@@ -18,7 +16,13 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   int _selectedIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,

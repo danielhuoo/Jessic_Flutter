@@ -8,7 +8,19 @@ class ListDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('歌单')), body: mainBody(context));
+    return Scaffold(
+        appBar: AppBar(title: Text('歌单'), actions: <Widget>[
+          // Text('正在播放')
+          IconButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  return PlayerPage(songInfo: null, isOnlyDisplay: true);
+                }));
+              },
+              icon: Icon(Icons.add))
+        ]),
+        body: mainBody(context));
   }
 
   Future<List> _getState(String playListId) async {
@@ -25,7 +37,7 @@ class ListDetailPage extends StatelessWidget {
     }
 
     if (alias != '') {
-      alias = '(${alias})';
+      alias = '(' + alias + ')';
     }
     return alias;
   }
@@ -219,7 +231,7 @@ class ListDetailPage extends StatelessWidget {
           onTap: () {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (BuildContext context) {
-              return PlayerPage(songInfo: data);
+              return PlayerPage(songInfo: data, isOnlyDisplay: false);
             }));
           },
           behavior: HitTestBehavior.opaque);
