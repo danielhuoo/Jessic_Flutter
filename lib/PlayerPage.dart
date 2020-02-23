@@ -25,7 +25,7 @@ class _PlayerPageState extends State<PlayerPage> {
     playerInstance.addListener(update);
     if (widget.isOnlyDisplay != true) {
       playerInstance.init(widget.songInfo);
-    }else{
+    } else {
       print('仅显示播放页');
     }
   }

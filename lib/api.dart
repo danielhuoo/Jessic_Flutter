@@ -1,7 +1,5 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
+import 'package:dio/dio.dart';
 
-const baseURL = 'http://192.168.1.110:3000';
 const url = {
   "login": '/login/cellphone',
   'getUserDetail': '/user/detail',
@@ -9,42 +7,51 @@ const url = {
   'getPlayListDetail': '/playlist/detail'
 };
 
-class Api {
-  static post(url, body) async {
-    return await http.post(baseURL + url, body: body);
-  }
+BaseOptions options = new BaseOptions(
+  baseUrl: "http://192.168.1.110:3000",
+  connectTimeout: 5000,
+  receiveTimeout: 3000,
+);
 
+Dio dio = new Dio(options);
+
+class Api {
   static login(String phone, String password) async {
     String uid;
-    final body = {'phone': phone, 'password': password};
-    final response = await post(url['login'], body);
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = convert.jsonDecode(response.body);
-      uid = data['account']['id'].toString();
-    }
-
-    return uid;
+    try {
+      Response response = await dio.get(url['login'],
+          queryParameters: {'phone': phone, 'password': password});
+      if (response.statusCode == 200) {
+        uid = response.data['account']['id'].toString();
+        return uid;
+      }
+    } catch (e) {}
   }
 
   static getUserDetail(String uid) async {
-    final body = {'uid': uid};
-    final response = await post(url['getUserDetail'], body);
-    Map<String, dynamic> data = convert.jsonDecode(response.body);
-    return data;
+    try {
+      Response response =
+          await dio.get(url['getUserDetail'], queryParameters: {'uid': uid});
+
+      return response.data;
+    } catch (e) {}
   }
 
   static getPlayListInfo(String uid) async {
-    final body = {'uid': uid};
-    final response = await post(url['getPlayListInfo'], body);
-    Map<String, dynamic> data = convert.jsonDecode(response.body);
-    return data;
+    try {
+      Response response =
+          await dio.get(url['getPlayListInfo'], queryParameters: {'uid': uid});
+
+      return response.data;
+    } catch (e) {}
   }
 
   static getPlayListDetail(String playListId) async {
-    final body = {'id': playListId};
-    final response = await post(url['getPlayListDetail'], body);
-    Map<String, dynamic> data = convert.jsonDecode(response.body);
-    return data;
+    try {
+      Response response = await dio
+          .get(url['getPlayListDetail'], queryParameters: {'id': playListId});
+      return response.data;
+    } catch (e) {}
   }
 }

@@ -29,6 +29,7 @@ class _SongListPageState extends State<SongListPage>
   }
 
   Widget mainBody(data) {
+    print('songlist');
     return Container(
         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: FutureBuilder(
@@ -96,7 +97,6 @@ class _SongListPageState extends State<SongListPage>
           ],
         ),
         onTap: () {
-          // print(data['playListId']);
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (BuildContext context) {
             return ListDetailPage(playListInfo: data);

@@ -9,28 +9,34 @@ class ListDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('歌单'), actions: <Widget>[
-          // Text('正在播放')
-          IconButton(
+        appBar: AppBar(
+            leading: BackButton(
               onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (BuildContext context) {
-                  return PlayerPage(songInfo: null, isOnlyDisplay: true);
-                }));
+                Navigator.pop(context);
               },
-              icon: Icon(Icons.add))
-        ]),
+            ),
+            title: Text('歌单'),
+            actions: <Widget>[
+              // Text('正在播放')
+              IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (BuildContext context) {
+                      return PlayerPage(songInfo: null, isOnlyDisplay: true);
+                    }));
+                  },
+                  icon: Icon(Icons.add))
+            ]),
         body: mainBody(context));
   }
 
   Future<List> _getState(String playListId) async {
-    print('_getState');
     var data = await Api.getPlayListDetail(playListId);
     var songs = data['playlist']['tracks'];
     return songs;
   }
 
-  getAlias(data) {
+  String getAlias(data) {
     String alias = '';
     for (int i = 0; i < data['alia'].length; i++) {
       alias += data['alia'][i];
@@ -153,6 +159,7 @@ class ListDetailPage extends StatelessWidget {
             case ConnectionState.done:
               List<Widget> songList = List();
               songList.add(getListTile(null, null, -1, ss.data.length));
+
               for (int i = 0; i < ss.data.length; i++) {
                 songList.add(getListTile(context, ss.data[i], i, 0));
               }
