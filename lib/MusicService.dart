@@ -8,7 +8,8 @@ abstract class MusicServiceModel extends ChangeNotifier {
   void pause() {}
   void prev() {}
   void next() {}
-  void init(data) {}
+  void init(int index) {}
+  void updatePlayList(Map data) {}
 
   get songInfo;
   AudioPlayerState get audioPlayerState;
@@ -16,10 +17,13 @@ abstract class MusicServiceModel extends ChangeNotifier {
   double get progressValue;
   String get durationText;
   String get positionText;
+  List get playList;
 }
 
 class MusicServiceImplementation extends MusicServiceModel {
   var _songInfo;
+  List _playList;
+  int _currentIndex;
   Duration _audioPlayerDuration;
   Duration _audioPlayerPosition;
   AudioPlayer _audioPlayer;
@@ -81,21 +85,25 @@ class MusicServiceImplementation extends MusicServiceModel {
 
   @override
   void prev() {
-    print('prev');
+    if (_currentIndex >= 1) {
+      init(--_currentIndex);
+    } else {
+      _dispose();
+      _initPlayerState(_playList[_currentIndex]);
+    }
   }
 
   @override
   void next() {
     print('next');
-  }
-
-  void _onComplete() {
-    //state会变为 AudioPlayerState.COMPLETED
-    _showPlayBtn = true;
-    notifyListeners();
-    // setState(() {
-    //   audioPlayerState =
-    // });
+    if (_currentIndex < _playList.length - 1) {
+      init(++_currentIndex);
+    } else {
+      // print('重播');
+      // _dispose();
+      // _initPlayerState(_playList[_currentIndex]);
+      init(_currentIndex = 0);
+    }
   }
 
   // release() async {
@@ -111,7 +119,14 @@ class MusicServiceImplementation extends MusicServiceModel {
   }
 
   @override
-  void init(data) {
+  void updatePlayList(Map data) {
+    _playList = data["tracks"];
+  }
+
+  @override
+  void init(int index) {
+    _currentIndex = index;
+    var data = _playList[index];
     if (_songInfo == null) {
       print('第一次播放');
       _initPlayerState(data);
@@ -159,8 +174,10 @@ class MusicServiceImplementation extends MusicServiceModel {
     });
 
     _completeSubscription = _audioPlayer.onPlayerCompletion.listen((event) {
-      _onComplete();
+      //state会变为 AudioPlayerState.COMPLETED
+      _showPlayBtn = true;
       next();
+      notifyListeners();
     });
 
     String url =
@@ -171,4 +188,7 @@ class MusicServiceImplementation extends MusicServiceModel {
       playSong();
     }
   }
+
+  @override
+  List get playList => _playList;
 }

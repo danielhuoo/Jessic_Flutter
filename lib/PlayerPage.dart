@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jessic_flutter/MusicService.dart';
 
-// example : https://github.com/luanpotter/audioplayers/blob/master/example/lib/player_widget.dart
 // Slider api: https://blog.csdn.net/qq_33635385/article/details/100067702
 // app bar : https://blog.csdn.net/it_xiaoshuai/article/details/87718827
 
 class PlayerPage extends StatefulWidget {
-  final songInfo;
+  final songIndex;
   final bool isOnlyDisplay;
-  PlayerPage({Key key, @required this.songInfo, this.isOnlyDisplay})
+  PlayerPage({Key key, @required this.songIndex, this.isOnlyDisplay})
       : super(key: key);
 
   @override
@@ -18,13 +17,12 @@ class PlayerPage extends StatefulWidget {
 
 class _PlayerPageState extends State<PlayerPage> {
   var playerInstance = GetIt.instance.get<MusicServiceModel>();
-
   @override
   initState() {
     super.initState();
     playerInstance.addListener(update);
     if (widget.isOnlyDisplay != true) {
-      playerInstance.init(widget.songInfo);
+      playerInstance.init(widget.songIndex);
     } else {
       print('仅显示播放页');
     }
@@ -146,42 +144,47 @@ class _PlayerPageState extends State<PlayerPage> {
                     child: Flex(
                       direction: Axis.horizontal,
                       children: <Widget>[
+                        // Expanded(
+                        //     flex: 1,
+                        //     child: IconButton(
+                        //       iconSize: 40.0,
+                        //       onPressed: () {
+                        //         playerInstance.prev();
+                        //       },
+                        //       icon: Icon(Icons.repeat),
+                        //     )),
                         Expanded(
+                            flex: 1,
                             child: IconButton(
-                          iconSize: 40.0,
-                          onPressed: () {
-                            playerInstance.prev();
-                          },
-                          icon: Icon(Icons.repeat),
-                        )),
+                              iconSize: 40.0,
+                              onPressed: () {
+                                playerInstance.prev();
+                              },
+                              icon: Icon(Icons.skip_previous),
+                            )),
                         Expanded(
-                            child: IconButton(
-                          iconSize: 40.0,
-                          onPressed: () {
-                            playerInstance.prev();
-                          },
-                          icon: Icon(Icons.skip_previous),
-                        )),
-                        Expanded(
+                            flex: 1,
                             child: playerInstance.showPlayBtn
                                 ? playBtnWidget()
                                 : pauseBtnWidget()),
                         Expanded(
+                            flex: 1,
                             child: IconButton(
-                          iconSize: 40.0,
-                          onPressed: () {
-                            playerInstance.next();
-                          },
-                          icon: Icon(Icons.skip_next),
-                        )),
-                        Expanded(
-                            child: IconButton(
-                          iconSize: 40.0,
-                          onPressed: () {
-                            playerInstance.next();
-                          },
-                          icon: Icon(Icons.playlist_play),
-                        ))
+                              iconSize: 40.0,
+                              onPressed: () {
+                                playerInstance.next();
+                              },
+                              icon: Icon(Icons.skip_next),
+                            )),
+                        // Expanded(
+                        //     flex: 1,
+                        //     child: IconButton(
+                        //       iconSize: 40.0,
+                        //       onPressed: () {
+                        //         playerInstance.next();
+                        //       },
+                        //       icon: Icon(Icons.playlist_play),
+                        //     ))
                       ],
                     )),
               ],

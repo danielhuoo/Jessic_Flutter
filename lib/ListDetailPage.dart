@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:jessic_flutter/MusicService.dart';
 import 'package:jessic_flutter/PlayerPage.dart';
 import 'api.dart';
 
-class ListDetailPage extends StatelessWidget {
-  final playListInfo;
-  ListDetailPage({Key key, @required this.playListInfo}) : super(key: key);
+class ListDetailPage extends StatefulWidget {
+  final String playListId;
+  ListDetailPage({Key key, @required this.playListId}) : super(key: key);
+  @override
+  _ListDetailPageState createState() => _ListDetailPageState();
+}
+
+class _ListDetailPageState extends State<ListDetailPage> {
+  var playListInfo;
+  final playerInstance = GetIt.instance.get<MusicServiceModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +31,7 @@ class ListDetailPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).push(
                         MaterialPageRoute(builder: (BuildContext context) {
-                      return PlayerPage(songInfo: null, isOnlyDisplay: true);
+                      return PlayerPage(songIndex: null, isOnlyDisplay: true);
                     }));
                   },
                   icon: Icon(Icons.add))
@@ -30,10 +39,9 @@ class ListDetailPage extends StatelessWidget {
         body: mainBody(context));
   }
 
-  Future<List> _getState(String playListId) async {
-    var data = await Api.getPlayListDetail(playListId);
-    var songs = data['playlist']['tracks'];
-    return songs;
+  Future _getState() async {
+    var data = await Api.getPlayListDetail(widget.playListId);
+    return data['playlist'];
   }
 
   String getAlias(data) {
@@ -151,17 +159,19 @@ class ListDetailPage extends StatelessWidget {
 
   Widget mainBody(context) {
     return FutureBuilder(
-        future: _getState(this.playListInfo['id'].toString()),
-        builder: (BuildContext context, AsyncSnapshot<List> ss) {
+        future: _getState(),
+        builder: (BuildContext context, AsyncSnapshot ss) {
           switch (ss.connectionState) {
             case ConnectionState.waiting:
               return Text('waiting');
             case ConnectionState.done:
               List<Widget> songList = List();
-              songList.add(getListTile(null, null, -1, ss.data.length));
+              this.playListInfo = ss.data;
+              var songs = this.playListInfo['tracks'];
+              songList.add(getListTile(null, null, -1, songs.length));
 
-              for (int i = 0; i < ss.data.length; i++) {
-                songList.add(getListTile(context, ss.data[i], i, 0));
+              for (int i = 0; i < songs.length; i++) {
+                songList.add(getListTile(context, songs[i], i, 0));
               }
 
               return Column(
@@ -202,43 +212,54 @@ class ListDetailPage extends StatelessWidget {
           behavior: HitTestBehavior.opaque);
     } else {
       row = GestureDetector(
-          child: Row(
+          child: Flex(
+            direction: Axis.horizontal,
             children: <Widget>[
-              Text(
-                (index + 1).toString(),
-                style: TextStyle(color: Color.fromARGB(255, 151, 150, 151)),
-              ),
-              Container(
-                  margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Row(
+              Expanded(
+                  flex: 0,
+                  child: Text(
+                    (index + 1).toString(),
+                    style: TextStyle(color: Color.fromARGB(255, 151, 150, 151)),
+                  )),
+              Expanded(
+                  flex: 1,
+                  child: Container(
+                      margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Text(data['name']),
-                          Text(
-                            getAlias(data),
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 96, 96, 97)),
+                          Flex(
+                            direction: Axis.horizontal,
+                            children: <Widget>[
+                              Expanded(flex: 0, child: Text(data['name'])),
+                              Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    getAlias(data),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        color: Color.fromARGB(255, 96, 96, 97)),
+                                  )),
+                            ],
                           ),
+                          Text(
+                            '${data['ar'][0]['name']} - ${data['al']['name']}',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromARGB(255, 96, 96, 97)),
+                          )
                         ],
-                      ),
-                      Text(
-                        '${data['ar'][0]['name']} - ${data['al']['name']}',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Color.fromARGB(255, 96, 96, 97)),
-                      )
-                    ],
-                  ))
+                      )))
             ],
           ),
           onTap: () {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (BuildContext context) {
-              return PlayerPage(songInfo: data, isOnlyDisplay: false);
+              playerInstance.updatePlayList(this.playListInfo);
+              return PlayerPage(songIndex: index, isOnlyDisplay: false);
             }));
           },
           behavior: HitTestBehavior.opaque);

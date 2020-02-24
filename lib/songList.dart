@@ -43,6 +43,7 @@ class _SongListPageState extends State<SongListPage>
                   for (int i = 0; i < ss.data.length; i++) {
                     playList.add(getRowItem(ss.data[i]));
                   }
+                  // currentList = ss.data;
 
                   return gridWidget(playList);
                 default:
@@ -97,9 +98,14 @@ class _SongListPageState extends State<SongListPage>
           ],
         ),
         onTap: () {
+          // Navigator.of(context)
+          //     .push(MaterialPageRoute(builder: (BuildContext context) {
+          //   return ListDetailPage(playListInfo: data);
+          // }));
+
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (BuildContext context) {
-            return ListDetailPage(playListInfo: data);
+            return ListDetailPage(playListId: data['id'].toString());
           }));
         });
   }
