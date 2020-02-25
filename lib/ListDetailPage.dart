@@ -231,18 +231,7 @@ class _ListDetailPageState extends State<ListDetailPage> {
                         children: <Widget>[
                           Flex(
                             direction: Axis.horizontal,
-                            children: <Widget>[
-                              Expanded(flex: 0, child: Text(data['name'])),
-                              Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    getAlias(data),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        color: Color.fromARGB(255, 96, 96, 97)),
-                                  )),
-                            ],
+                            children: songNameWidget(data),
                           ),
                           Text(
                             '${data['ar'][0]['name']} - ${data['al']['name']}',
@@ -266,6 +255,33 @@ class _ListDetailPageState extends State<ListDetailPage> {
     }
 
     return row;
+  }
+
+  List<Widget> songNameWidget(data) {
+    bool isCurrentSong = false;
+    //如果当前没有播放音乐。那么songInfo是null的
+    if (playerInstance.songInfo != null) {
+      isCurrentSong = data['id'] == playerInstance.songInfo['id'];
+    }
+
+    return <Widget>[
+      Expanded(
+        flex: 0,
+        child: Text(data['name'],
+            style: TextStyle(color: isCurrentSong ? Colors.red : Colors.black)),
+      ),
+      Expanded(
+          flex: 1,
+          child: Text(
+            getAlias(data),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                color: isCurrentSong
+                    ? Colors.red
+                    : Color.fromARGB(255, 96, 96, 97)),
+          ))
+    ];
   }
 
   Widget playListImgWidget() {

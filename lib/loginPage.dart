@@ -23,7 +23,7 @@ class LoginPage extends StatelessWidget {
     }
 
     //For test
-    // goHomePage();
+    goHomePage();
     return Scaffold(
         appBar: AppBar(
           title: Text(
