@@ -13,7 +13,24 @@ class ListDetailPage extends StatefulWidget {
 
 class _ListDetailPageState extends State<ListDetailPage> {
   var playListInfo;
+  var futureState;
   final playerInstance = GetIt.instance.get<MusicServiceModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    playerInstance.addListener(update);
+
+    futureState = _getState();
+  }
+
+  @override
+  dispose() {
+    playerInstance.removeListener(update);
+    super.dispose();
+  }
+
+  update() => setState(() => {});
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +176,7 @@ class _ListDetailPageState extends State<ListDetailPage> {
 
   Widget mainBody(context) {
     return FutureBuilder(
-        future: _getState(),
+        future: futureState,
         builder: (BuildContext context, AsyncSnapshot ss) {
           switch (ss.connectionState) {
             case ConnectionState.waiting:
