@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:jessic_flutter/HomePage.dart';
+import 'package:jessic_flutter/loginPage.dart';
 import 'package:jessic_flutter/serviceLocator.dart';
 import 'package:jessic_flutter/state/userState.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   ServiceLocator.setupLocator();
-  runApp(MyApp());
+  runApp(MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => UserState())],
+      child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,10 +20,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: MultiProvider(
-        providers: [ChangeNotifierProvider(create: (context) => UserState())],
-        child: HomePage(),
-      ),
+      // initialRoute: '/',
+      // routes: <String, WidgetBuilder>{
+      //   '/': (context) => BottomNavigationWidget(),
+      //   '/login': (context) => LoginPage()
+      // },
+      home: LoginPage(),
+      // home: MultiProvider(
+      //     providers: [ChangeNotifierProvider(create: (context) => UserState())],
+      //     // child: HomePage(),
+      //     child: LoginPage()),
     );
   }
 }

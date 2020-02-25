@@ -29,7 +29,6 @@ class _SongListPageState extends State<SongListPage>
   }
 
   Widget mainBody(data) {
-    print('songlist');
     return Container(
         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: FutureBuilder(
@@ -43,8 +42,6 @@ class _SongListPageState extends State<SongListPage>
                   for (int i = 0; i < ss.data.length; i++) {
                     playList.add(getRowItem(ss.data[i]));
                   }
-                  // currentList = ss.data;
-
                   return gridWidget(playList);
                 default:
                   return Text('11');
@@ -98,11 +95,6 @@ class _SongListPageState extends State<SongListPage>
           ],
         ),
         onTap: () {
-          // Navigator.of(context)
-          //     .push(MaterialPageRoute(builder: (BuildContext context) {
-          //   return ListDetailPage(playListInfo: data);
-          // }));
-
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (BuildContext context) {
             return ListDetailPage(playListId: data['id'].toString());

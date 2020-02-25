@@ -22,7 +22,6 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,

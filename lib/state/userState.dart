@@ -21,13 +21,23 @@ class UserState extends ChangeNotifier {
     _avatarUrl = profile['nickname'].toString();
     _isLogined = true;
     _username = val.toString();
-    notifyListeners();
+
+    return _isLogined;
+    // notifyListeners();
     // print(profile);
   }
 
   getState(String phone, String pwd) async {
     String uid = await Api.login(phone, pwd);
     var data = await Api.getUserDetail(uid);
-    updateState(phone, data);
+    return updateState(phone, data);
+  }
+
+  logout() {
+    _uid = '';
+    _username = '';
+    _nickname = '';
+    _avatarUrl = '';
+    _isLogined = false;
   }
 }
