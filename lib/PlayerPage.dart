@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jessic_flutter/MusicService.dart';
+import 'package:jessic_flutter/commonWidget.dart';
 
 // Slider api: https://blog.csdn.net/qq_33635385/article/details/100067702
 // app bar : https://blog.csdn.net/it_xiaoshuai/article/details/87718827
@@ -59,7 +60,8 @@ class _PlayerPageState extends State<PlayerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+        appBar: CommonWidget.myAppBar(
+          '',
           title: Column(children: <Widget>[
             Text(
               playerInstance.songInfo['name'],

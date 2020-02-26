@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jessic_flutter/MusicService.dart';
 import 'package:jessic_flutter/PlayerPage.dart';
+import 'package:jessic_flutter/commonWidget.dart';
 import 'api.dart';
 
 class ListDetailPage extends StatefulWidget {
@@ -20,7 +21,6 @@ class _ListDetailPageState extends State<ListDetailPage> {
   void initState() {
     super.initState();
     playerInstance.addListener(update);
-
     futureState = _getState();
   }
 
@@ -35,24 +35,21 @@ class _ListDetailPageState extends State<ListDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            leading: BackButton(
+        appBar: CommonWidget.myAppBar('歌单', leading: BackButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ), actions: <Widget>[
+          // Text('正在播放')
+          IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  return PlayerPage(songIndex: null, isOnlyDisplay: true);
+                }));
               },
-            ),
-            title: Text('歌单'),
-            actions: <Widget>[
-              // Text('正在播放')
-              IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return PlayerPage(songIndex: null, isOnlyDisplay: true);
-                    }));
-                  },
-                  icon: Icon(Icons.add))
-            ]),
+              icon: Icon(Icons.add))
+        ]),
         body: mainBody(context));
   }
 

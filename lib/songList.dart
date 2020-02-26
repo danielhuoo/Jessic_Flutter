@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jessic_flutter/ListDetailPage.dart';
+import 'package:jessic_flutter/commonWidget.dart';
 import 'package:jessic_flutter/state/userState.dart';
 import 'package:provider/provider.dart';
 import 'api.dart';
@@ -19,7 +20,9 @@ class _SongListPageState extends State<SongListPage>
     super.build(context);
     UserState provider = Provider.of<UserState>(context);
     return Scaffold(
-        appBar: AppBar(title: Text('歌单列表')), body: mainBody(provider.uid));
+        backgroundColor: Colors.transparent,
+        appBar: CommonWidget.myAppBar('歌单列表'),
+        body: mainBody(provider.uid));
   }
 
   Future<List> _getState(String uid) async {

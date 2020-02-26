@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jessic_flutter/bottomNavigationWidget.dart';
+import 'package:jessic_flutter/commonWidget.dart';
 import 'package:jessic_flutter/state/userState.dart';
 import 'package:provider/provider.dart';
 
@@ -23,16 +24,9 @@ class LoginPage extends StatelessWidget {
     }
 
     //For test
-    goHomePage();
+    // goHomePage();
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            '手机号登录',
-            style: TextStyle(color: Colors.black),
-          ),
-          backgroundColor: Colors.lightBlue,
-          elevation: 0.0,
-        ),
+        appBar: CommonWidget.myAppBar('手机号登录'),
         body: Center(
           child: Container(
             child: Column(

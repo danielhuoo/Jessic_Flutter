@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jessic_flutter/loginPage.dart';
 import 'package:jessic_flutter/serviceLocator.dart';
 import 'package:jessic_flutter/state/userState.dart';
@@ -14,11 +15,12 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     return MaterialApp(
       title: 'Jessic',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        primarySwatch: Colors.grey,
       ),
       // initialRoute: '/',
       // routes: <String, WidgetBuilder>{
