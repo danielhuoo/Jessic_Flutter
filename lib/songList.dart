@@ -21,7 +21,8 @@ class _SongListPageState extends State<SongListPage>
     UserState provider = Provider.of<UserState>(context);
     return Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: CommonWidget.myAppBar('歌单列表'),
+        appBar: CommonWidget.myAppBar('歌单列表',
+            actions: <Widget>[CommonWidget.nowPlayingButton(context)]),
         body: mainBody(provider.uid));
   }
 

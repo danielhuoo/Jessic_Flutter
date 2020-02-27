@@ -39,17 +39,7 @@ class _ListDetailPageState extends State<ListDetailPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-        ), actions: <Widget>[
-          // Text('正在播放')
-          IconButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (BuildContext context) {
-                  return PlayerPage(songIndex: null, isOnlyDisplay: true);
-                }));
-              },
-              icon: Icon(Icons.add))
-        ]),
+        ), actions: <Widget>[CommonWidget.nowPlayingButton(context)]),
         body: mainBody(context));
   }
 

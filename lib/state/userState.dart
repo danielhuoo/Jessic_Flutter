@@ -23,8 +23,6 @@ class UserState extends ChangeNotifier {
     _username = val.toString();
 
     return _isLogined;
-    // notifyListeners();
-    // print(profile);
   }
 
   getState(String phone, String pwd) async {

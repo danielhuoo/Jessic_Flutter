@@ -28,10 +28,6 @@ class MyApp extends StatelessWidget {
       //   '/login': (context) => LoginPage()
       // },
       home: LoginPage(),
-      // home: MultiProvider(
-      //     providers: [ChangeNotifierProvider(create: (context) => UserState())],
-      //     // child: HomePage(),
-      //     child: LoginPage()),
     );
   }
 }

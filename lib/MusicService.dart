@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:jessic_flutter/api.dart';
 
 abstract class MusicServiceModel extends ChangeNotifier {
   void playSong() {}
@@ -12,16 +13,19 @@ abstract class MusicServiceModel extends ChangeNotifier {
   void updatePlayList(Map data) {}
 
   get songInfo;
+  get commentInfo;
   AudioPlayerState get audioPlayerState;
   bool get showPlayBtn;
   double get progressValue;
   String get durationText;
   String get positionText;
   List get playList;
+  // int get totalComments;
 }
 
 class MusicServiceImplementation extends MusicServiceModel {
   var _songInfo;
+  var _commentInfo;
   List _playList;
   int _currentIndex;
   Duration _audioPlayerDuration;
@@ -35,6 +39,7 @@ class MusicServiceImplementation extends MusicServiceModel {
   StreamSubscription _durationSubscription;
   StreamSubscription _positionSubscription;
   StreamSubscription _completeSubscription;
+  // int _totalComments;
 
   @override
   AudioPlayerState get audioPlayerState => _audioPlayerState;
@@ -55,6 +60,10 @@ class MusicServiceImplementation extends MusicServiceModel {
   get songInfo => _songInfo;
 
   @override
+  get commentInfo => _commentInfo;
+  // int get totalComments => _totalComments;
+
+  @override
   void playSong() {
     if (audioPlayerState != AudioPlayerState.PLAYING) {
       resume();
@@ -62,6 +71,9 @@ class MusicServiceImplementation extends MusicServiceModel {
       pause();
     }
   }
+
+  @override
+  List get playList => _playList;
 
   @override
   void resume() async {
@@ -99,9 +111,6 @@ class MusicServiceImplementation extends MusicServiceModel {
     if (_currentIndex < _playList.length - 1) {
       init(++_currentIndex);
     } else {
-      // print('重播');
-      // _dispose();
-      // _initPlayerState(_playList[_currentIndex]);
       init(_currentIndex = 0);
     }
   }
@@ -110,6 +119,10 @@ class MusicServiceImplementation extends MusicServiceModel {
   //   print('release');
   //   await audioPlayer.release();
   // }
+
+  _getSongComment() async {
+    _commentInfo = await Api.getSongComment(_songInfo['id'].toString(), 1);
+  }
 
   void _dispose() {
     _audioPlayer.stop();
@@ -141,6 +154,8 @@ class MusicServiceImplementation extends MusicServiceModel {
 
   void _initPlayerState(data) async {
     _songInfo = data;
+    _getSongComment();
+
     //init durationText & positionText to 0:00:00
     Duration zeroDuration = Duration(hours: 0, minutes: 0, seconds: 0);
     _positionText = _durationText =
@@ -188,7 +203,4 @@ class MusicServiceImplementation extends MusicServiceModel {
       playSong();
     }
   }
-
-  @override
-  List get playList => _playList;
 }

@@ -17,6 +17,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  sliding_up_panel: ^1.0.0
   dio: 3.0.8
   get_it: ^3.1.0
   audioplayers: ^0.14.0

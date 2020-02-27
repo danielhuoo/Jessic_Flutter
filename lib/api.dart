@@ -4,7 +4,8 @@ const url = {
   "login": '/login/cellphone',
   'getUserDetail': '/user/detail',
   'getPlayListInfo': '/user/playlist',
-  'getPlayListDetail': '/playlist/detail'
+  'getPlayListDetail': '/playlist/detail',
+  'getSongComment': '/comment/music'
 };
 
 BaseOptions options = new BaseOptions(
@@ -51,6 +52,14 @@ class Api {
     try {
       Response response = await dio
           .get(url['getPlayListDetail'], queryParameters: {'id': playListId});
+      return response.data;
+    } catch (e) {}
+  }
+
+  static getSongComment(String songId, int limit) async {
+    try {
+      Response response = await dio
+          .get(url['getSongComment'], queryParameters: {'id': songId});
       return response.data;
     } catch (e) {}
   }
