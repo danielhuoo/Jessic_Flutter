@@ -4,6 +4,7 @@ import 'package:jessic_flutter/MusicService.dart';
 import 'package:jessic_flutter/PlayerPage.dart';
 
 class CommonWidget {
+  /// Return the common Widget of AppBar
   static Widget myAppBar(String titleTxt,
       {Widget leading, List<Widget> actions, Widget title}) {
     return AppBar(
@@ -17,6 +18,7 @@ class CommonWidget {
             : title);
   }
 
+  /// Return the nowPlayingButton. Only the playerInstance has songInfo, the button is enabled.
   static Widget nowPlayingButton(context) {
     var playerInstance = GetIt.instance.get<MusicServiceModel>();
     var onPressedFunc;

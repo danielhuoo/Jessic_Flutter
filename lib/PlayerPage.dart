@@ -5,7 +5,6 @@ import 'package:jessic_flutter/commonWidget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 // Slider api: https://blog.csdn.net/qq_33635385/article/details/100067702
-// app bar : https://blog.csdn.net/it_xiaoshuai/article/details/87718827
 
 class PlayerPage extends StatefulWidget {
   final songIndex;
