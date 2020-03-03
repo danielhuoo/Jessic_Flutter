@@ -3,6 +3,7 @@ import 'songList.dart';
 import 'account.dart';
 
 class BottomNavigationWidget extends StatefulWidget {
+  static const routeName = '/mainPage';
   @override
   _BottomNavigationWidgetState createState() => _BottomNavigationWidgetState();
 }

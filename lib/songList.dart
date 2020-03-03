@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jessic_flutter/ListDetailPage.dart';
+import 'package:jessic_flutter/PlayerPage.dart';
 import 'package:jessic_flutter/commonWidget.dart';
 import 'package:jessic_flutter/state/userState.dart';
 import 'package:provider/provider.dart';
@@ -99,10 +100,13 @@ class _SongListPageState extends State<SongListPage>
           ],
         ),
         onTap: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (BuildContext context) {
-            return ListDetailPage(playListId: data['id'].toString());
-          }));
+          // Navigator.of(context)
+          //     .push(MaterialPageRoute(builder: (BuildContext context) {
+          //   return ListDetailPage(playListId: data['id'].toString());
+          // }));
+
+          Navigator.pushNamed(context, ListDetailPage.routeName,
+              arguments: ListDetailPageArguments(data['id'].toString()));
         });
   }
 }

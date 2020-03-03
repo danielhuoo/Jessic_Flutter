@@ -5,9 +5,16 @@ import 'package:jessic_flutter/PlayerPage.dart';
 import 'package:jessic_flutter/commonWidget.dart';
 import 'api.dart';
 
+class ListDetailPageArguments {
+  final String playListId;
+  ListDetailPageArguments(this.playListId);
+}
+
 class ListDetailPage extends StatefulWidget {
   final String playListId;
   ListDetailPage({Key key, @required this.playListId}) : super(key: key);
+  static const routeName = '/listDetailPage';
+
   @override
   _ListDetailPageState createState() => _ListDetailPageState();
 }
@@ -249,11 +256,9 @@ class _ListDetailPageState extends State<ListDetailPage> {
             ],
           ),
           onTap: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (BuildContext context) {
-              playerInstance.updatePlayList(this.playListInfo);
-              return PlayerPage(songIndex: index, isOnlyDisplay: false);
-            }));
+            playerInstance.updatePlayList(this.playListInfo);
+            Navigator.pushNamed(context, PlayerPage.routeName,
+                arguments: PlayerPageArguments(index, false));
           },
           behavior: HitTestBehavior.opaque);
     }

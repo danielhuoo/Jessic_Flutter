@@ -5,6 +5,7 @@ import 'package:jessic_flutter/state/userState.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
+  static const routeName = '/login';
   @override
   Widget build(BuildContext context) {
     UserState provider = Provider.of<UserState>(context);
@@ -16,10 +17,7 @@ class LoginPage extends StatelessWidget {
     void goHomePage() async {
       var isLogined = await provider.getState(_phone.text, _password.text);
       if (isLogined) {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
-          return BottomNavigationWidget();
-        }));
+        Navigator.pushNamed(context, BottomNavigationWidget.routeName);
       }
     }
 

@@ -6,11 +6,19 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 // Slider api: https://blog.csdn.net/qq_33635385/article/details/100067702
 
+class PlayerPageArguments {
+  final songIndex;
+  final bool isOnlyDisplay;
+  PlayerPageArguments(this.songIndex, this.isOnlyDisplay);
+}
+
 class PlayerPage extends StatefulWidget {
   final songIndex;
   final bool isOnlyDisplay;
   PlayerPage({Key key, @required this.songIndex, this.isOnlyDisplay})
       : super(key: key);
+
+  static const routeName = '/player';
 
   @override
   _PlayerPageState createState() => _PlayerPageState();

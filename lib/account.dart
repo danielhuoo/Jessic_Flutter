@@ -48,11 +48,8 @@ class _AccountPageState extends State<AccountPage>
                               onPressed: () {
                                 Navigator.of(context).pop();
                                 provider.logout();
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) {
-                                  return LoginPage();
-                                }));
+                                Navigator.pushNamed(
+                                    context, LoginPage.routeName);
                               },
                             ),
                           ],

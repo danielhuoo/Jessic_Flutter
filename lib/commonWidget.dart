@@ -24,10 +24,8 @@ class CommonWidget {
     var onPressedFunc;
     if (playerInstance.songInfo != null) {
       onPressedFunc = () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (BuildContext context) {
-          return PlayerPage(songIndex: null, isOnlyDisplay: true);
-        }));
+        Navigator.pushNamed(context, PlayerPage.routeName,
+            arguments: PlayerPageArguments(null, true));
       };
     } else {
       onPressedFunc = null;
