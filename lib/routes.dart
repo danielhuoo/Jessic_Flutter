@@ -3,7 +3,7 @@ import 'package:jessic_flutter/ListDetailPage.dart';
 import 'package:jessic_flutter/PlayerPage.dart';
 import 'package:jessic_flutter/bottomNavigationWidget.dart';
 import 'package:jessic_flutter/loginPage.dart';
-
+/// 教程：https://flutter.dev/docs/cookbook/navigation/navigate-with-arguments
 class MyRoutes {
   static generateRoute(RouteSettings settings) {
     switch (settings.name) {

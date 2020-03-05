@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jessic_flutter/ListDetailPage.dart';
-import 'package:jessic_flutter/PlayerPage.dart';
 import 'package:jessic_flutter/commonWidget.dart';
 import 'package:jessic_flutter/state/userState.dart';
 import 'package:provider/provider.dart';
