@@ -3,6 +3,10 @@
 A new Flutter project.
 我的第一个Flutter项目。
 
+
+ps: 需要适配iPhone5的真机测试，步骤繁琐而且阻碍极多，我放弃了。等以后心情好一点再弄吧。下载的文件都放在群晖的Software/engine里面了。
+[Building ARMv7 (iOS) & armeabi v7a (Android) with Xcode10](https://github.com/flutter/flutter/wiki/Supporting-legacy-platforms)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
