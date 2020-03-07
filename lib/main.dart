@@ -8,7 +8,7 @@ import 'package:jessic_flutter/state/userState.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  // 显示启动画面 3秒
+  // 显示启动画面 3秒.
   Timer(Duration(seconds: 3), () {
     ServiceLocator.setupLocator();
     runApp(MultiProvider(
