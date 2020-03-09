@@ -19,3 +19,11 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+To do:
+* 安卓，登录后不能再返回
+* 退出后需要删除音乐播放器实例
+* 歌曲图片要有loading状态
+* 安卓播放页 状态栏居中
+* app图标
+* 加载歌单详情需要有loading
